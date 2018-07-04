@@ -1,0 +1,111 @@
+<div id="sell_page" #fullPage>
+  <div class="print-only">
+    <h2 class="text-center">TPS Tires</h2>
+    <div class="text-center">The power of sole</div>
+    <div class="text-center">Office: House#244, Road#03, Baridhara DOHS Dhaka, Bangladesh, Contact: +880 1707002002</div>
+    <hr>
+  </div>
+  <div class="inv-header d-flex">
+    <h2 class="ml-auto mr-auto">Sells Invoices Details</h2>
+  </div>
+  <div class="container">
+    <div class="print-it">
+      <div class="row">
+        <div class="col-sm-12 mt-3 mb-3">
+          <mat-card>
+            <div class="row">
+              <div class="col-md-3 bold">Code</div>
+              <div class="col-md-9">{{sellInvoice?.code | uppercase}}</div>
+            </div>
+            <div class="row">
+              <div class="col-md-3 bold">Date</div>
+              <div class="col-md-9">{{sellInvoice?.created_at | date: 'd/MM/yyyy'}}</div>
+            </div>
+            <div class="row">
+              <div class="col-md-3 bold">Sold by</div>
+              <div class="col-md-9">
+                <div class="row">
+                  <div class="col-md-4">{{sellInvoice?.sell_by?.name}}</div>
+                  <div class="col-md-8"><span class="bold">Email:</span> {{sellInvoice?.sell_by?.email}}</div>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-3 bold">Customer</div>
+              <div class="col-md-9">
+                <div class="row">
+                  <div class="col-md-4">{{sellInvoice?.customer?.name}}</div>
+                  <div class="col-md-8"><span class="bold">Contact no: </span>{{sellInvoice?.customer?.contact_no}}</div>
+                </div>
+              </div>
+              <div class="col-md-3 bold">Shipping Address</div>
+              <div class="col-md-9">{{sellInvoice?.customer?.address}}</div>
+            </div>
+            <div class="row">
+              <div class="col-md-3 bold">Purchase Price</div>
+              <div class="col-md-9">{{sellInvoice?.total_purchase_price | currency: 'BDT '}}</div>
+            </div>
+          </mat-card>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-sm-12 mt-3 mb-3">
+          <mat-card>
+            <div class="inv-header d-flex">
+              <h2 class="ml-auto mr-auto">Sold Product Details</h2>
+            </div>
+            <div class="row" *ngIf="sellInvoice?.sell_items">
+              <div class="col-md-12 table-responsive">
+                <table class="table">
+                  <tr>
+                    <th>Item</th>
+                    <th>Category</th>
+                    <th>Brand</th>
+                    <th>Details</th>
+                    <th>Quantity</th>
+                    <th>Sells Price</th>
+                    <th class="no-print">Purchase Price</th>
+                  </tr>
+                  <tr *ngFor="let item of sellInvoice.sell_items">
+                    <td>{{item?.item?.name}}</td>
+                    <td>{{item?.item?.category.name}}</td>
+                    <td>{{item?.item?.brand.name}}</td>
+                    <td><div [innerHTML]="item?.details"></div></td>
+                    <td>{{item.quantity}}</td>
+                    <td>{{item?.sell_price | currency: 'BDT '}}/{{item?.item?.unit}}</td>
+                    <td class="no-print">{{item?.purchase_price | currency: 'BDT '}}/{{item?.item?.unit}}</td>
+                  </tr>
+                  <tr class="bold">
+                    <td class="pb-0" colspan="5" style="text-align: end">Product Price:</td>
+                    <td class="pb-0" colspan="2">{{sellInvoice.total_sell_price | currency: 'BDT '}}</td>
+                  </tr>
+                  <tr class="bold" style="border-top: 0">
+                    <td colspan="5" class="py-0" style="text-align: end; border-top: 0">Vat({{sellInvoice.vat}}%):</td>
+                    <td colspan="2" class="py-0" style="border-top: 0">{{sellInvoice.vat_amount | currency: 'BDT '}}</td>
+                  </tr>
+                  <tr class="bold">
+                    <td colspan="5" class="py-0" style="text-align: end; border-top: 0">Grand Total:</td>
+                    <td colspan="2" class="py-0" style="border-top: 0">{{getGrandTotal(sellInvoice.total_sell_price, sellInvoice.vat_amount) | currency: 'BDT '}}</td>
+                  </tr>
+                </table>
+
+              </div>
+            </div>
+          </mat-card>
+        </div>
+      </div>
+    </div>
+
+    <div class="row pt-3 no-print">
+      <div class="col-md-12">
+        <div class="d-flex">
+          <button mat-raised-button color="primary" routerLink="/sell/invoice">
+            <mat-icon>keyboard_backspace</mat-icon> Back
+          </button>
+          <button mat-raised-button color="primary" class="ml-auto" (click)="onDocumentPrint()">Print it</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,9 @@
+.file{
+  border-radius: 5px;
+}
+.file div a{
+  color: white;
+}
+a mat-icon{
+  color: white;
+}

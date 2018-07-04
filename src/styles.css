@@ -1,1 +1,49 @@
 /* You can add global styles to this file, and also import other style files */
+
+@import "~@angular/material/prebuilt-themes/indigo-pink.css";
+
+html,body{
+  margin: 0;
+  padding: 0;
+  height: 100%;
+}
+.inv-header{
+  padding: 25px 0;
+}
+.inv-header h2{
+  text-align: center;
+}
+h2{
+  font-size: 1.4em;
+}
+.bold{
+  font-weight: bold;
+}
+.print-only{
+  display: none !important;
+}
+.total-price{
+  font-weight: bold;
+  font-size: 1.2em;
+}
+mat-card{
+  box-shadow: 0 5px 5px -3px rgba(0,0,0,.2), 0 8px 10px 1px rgba(0,0,0,.14), 0 3px 14px 2px rgba(0,0,0,.12) !important;
+}
+
+@media print {
+  .no-print{
+    display: none !important;
+  }
+  .no-print-l{
+    display: none;
+  }
+  .print-it{
+    display: block !important;
+  }
+  .print-only{
+    display: block !important;
+  }
+
+}
+
+

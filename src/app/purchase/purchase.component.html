@@ -1,0 +1,22 @@
+<div class="container ng-body-wrapper">
+
+  <div class="inv-header d-flex">
+    <h2 class="ml-auto mr-auto">Manage Purchase</h2>
+    <div>
+      <button routerLink="/purchase/create"
+              style=" position: fixed;
+                    right: 30px;
+                    bottom: 15px;
+                    z-index: 5; "
+              matTooltip="Create new purchase"
+              mat-icon-button color="primary">
+        <mat-icon style="font-size: 4em;">add_circle</mat-icon>
+      </button>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12">
+      <app-purchase-list></app-purchase-list>
+    </div>
+  </div>
+</div>

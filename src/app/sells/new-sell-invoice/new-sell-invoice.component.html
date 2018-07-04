@@ -1,0 +1,206 @@
+<div class="inv-header d-flex">
+  <h2 class="ml-auto mr-auto">Sell Products</h2>
+</div>
+
+<div class="container pb-5">
+  <form #f="ngForm" (ngSubmit)="onSellAdd(f)">
+    <div class="row">
+      <div class="col-sm-12 mt-3 mb-3">
+        <mat-card>
+          <div class="row">
+            <div class="col-md-6">
+              <mat-form-field>
+                <input
+                  matInput type="text"
+                  placeholder="Code"
+                  ngModel name="ItemCode"
+                  required
+                  disabled
+                  #codeInput = "ngModel"
+                  [(ngModel)]="sellInvoice.code"
+                >
+                <mat-error *ngIf="codeInput.hasError('required')">Purchase code is required</mat-error>
+              </mat-form-field>
+            </div>
+            <div class="col-md-6">
+              <mat-form-field class="example-full-width">
+                <input type="text"
+                       (keyup) ="getCustomerByContact()"
+                       placeholder="Enter customer contact no" required
+                       aria-label="Number" matInput [matAutocomplete]="supplierac"
+                       [(ngModel)] = "customerText"
+                       #customerContactInput = "ngModel"
+                       name="customer_contact_no">
+                <mat-autocomplete #supplierac="matAutocomplete"  >
+                  <mat-option *ngFor="let option of customerOptions" [value]="option.contact_no" (onSelectionChange)="onCustomerChange(option)">
+                    {{  option.contact_no }}
+                  </mat-option>
+                </mat-autocomplete>
+                <mat-error *ngIf="customerContactInput.hasError('required')">Supplier is required</mat-error>
+              </mat-form-field>
+            </div>
+            <div class="col-md-6">
+              <mat-form-field class="example-full-width">
+                <input type="text"
+                       placeholder="Enter customer name" required
+                       aria-label="Number" matInput
+                       [(ngModel)] = "customer.name"
+                       #customerNameInput = "ngModel"
+                       name="customerName">
+                <mat-error *ngIf="customerNameInput.hasError('required')">Customer name is required</mat-error>
+              </mat-form-field>
+            </div>
+            <div class="col-md-6">
+              <mat-form-field class="example-full-width">
+                <input type="text"
+                       (keyup) ="getItemByCode()"
+                       placeholder="Enter an Product name" required
+                       aria-label="Number" matInput [matAutocomplete]="itemac"
+                       [(ngModel)] = "itemText"
+                       #ItemInput = "ngModel"
+                       name="itemName">
+                <mat-autocomplete #itemac="matAutocomplete"  >
+                  <mat-option *ngFor="let option of itemOptions" [value]="option.name" (onSelectionChange)="onItemChange(option)">
+                    {{  option.code }} <span style="font-style: italic; font-size: .8em; font-weight: bold;">{{option.name}}</span>
+                  </mat-option>
+                </mat-autocomplete>
+                <mat-error *ngIf="ItemInput.hasError('required')">Product is required</mat-error>
+              </mat-form-field>
+            </div>
+            <div class="col-md-6 no-print text-success" *ngIf="item.id">
+              Available Product Quantity: {{itemQuantity}}
+            </div>
+            <div class="col-md-6 no-print text-success" *ngIf="item.id">
+              Product Purchase Price: {{item?.purchase_price}}
+            </div>
+            <div class="col-md-6" *ngIf="item.id">
+              <mat-form-field class="example-full-width">
+                <input type="number"
+                       placeholder="Enter product quantity"
+                       required [max]="itemQuantity"
+                       aria-label="Number" matInput
+                       [(ngModel)] = "item.quantity"
+                       #itemQuantityInput = "ngModel"
+                       name="itemQuantity">
+                <mat-error *ngIf="itemQuantityInput.hasError('required')">Quantity should not be 0</mat-error>
+                <!--<mat-error *ngIf="check(itemQuantityInput)">Reduce quantity. Product not available</mat-error>-->
+                <span class="text-danger no-print"
+                      style="font-weight: bold; font-size: .8em; font-style: italic"
+                      *ngIf="item.quantity > itemQuantity">Reduce quantity. Product not available</span>
+              </mat-form-field>
+            </div>
+            <div class="col-md-6" *ngIf="item.id">
+              <mat-form-field class="example-full-width">
+                <input type="number"
+                       placeholder="Enter Sell Price" required
+                       [min]="(item.sell_price-((item.sell_price*item.discount)/100))"
+                       aria-label="Number" matInput
+                       [(ngModel)] = "item.sell_price"
+                       #itemSellPriceInput = "ngModel"
+                       name="itemSellPrice">
+                <mat-error *ngIf="itemSellPriceInput.hasError('required')">Sell price is required</mat-error>
+                <!--<mat-error *ngIf="itemSellPriceInput.hasError('min')">Sell Price is less than purchase price</mat-error>-->
+                <span class="text-danger no-print"
+                      style="font-weight: bold; font-size: .8em; font-style: italic"
+                      *ngIf="item.purchase_price>(item.sell_price-((item.sell_price*item.discount)/100))">
+            After discount product price is less than purchase price</span>
+              </mat-form-field>
+            </div>
+            <div class="col-md-6" *ngIf="item.id">
+              <mat-form-field>
+                <input matInput
+                       type="number"
+                       [(ngModel)]="item.discount"
+                       name="itemDiscount"
+                       placeholder="Discount (%)">
+              </mat-form-field>
+            </div>
+            <div class="col-md-6" *ngIf="item.id">
+              <mat-form-field>
+                <input matInput
+                       type="number"
+                       [(ngModel)]="sellInvoice.vat"
+                       name="sellVat"
+                       placeholder="Vat (%)">
+              </mat-form-field>
+            </div>
+            <div class="col-sm-12">
+              <mat-form-field>
+                <div class="mb-3">Sells Details</div>
+                <textarea matInput
+                          [froalaEditor]="{
+                    placeholderText: 'Enter Sells details here...',
+                    imageUpload: false,
+                    videoUpload: false
+                    }"
+                          name="details"
+                          id="" cols="30"
+                          ngModel
+                          [(ngModel)]="sell.details"
+                          #detailsInput="ngModel"
+                          rows="10"></textarea>
+              </mat-form-field>
+            </div>
+            <div class="col-sm-12">
+              <div class="d-flex justify-content-end">
+                <button mat-raised-button
+                        type="submit"
+                        [disabled]="!f.valid"
+                        matTooltip="Add item to list"
+                        color="primary">Add Item</button>
+              </div>
+            </div>
+          </div>
+        </mat-card>
+      </div>
+    </div>
+  </form>
+
+  <div class="row" *ngIf="sellInvoice.sell_items.length>0">
+    <div class="col-sm-12 mt-3 mb-3">
+      <mat-card>
+        <div class="table-responsive pt-3" >
+          <table class="table">
+            <tr>
+              <th>Item</th>
+              <th>Quantity</th>
+              <th>Price/Unit</th>
+              <th>Vat(%)</th>
+              <th>Discount(%)</th>
+              <th>Total</th>
+              <th>Action</th>
+            </tr>
+            <tr *ngFor="let sellItem of sellInvoice.sell_items">
+              <td>{{sellItem.item.name}}</td>
+              <td>{{sellItem.item.quantity}}</td>
+              <td>{{sellItem.item.sell_price}}</td>
+              <td>{{sellInvoice.vat}}</td>
+              <td>{{sellItem.item.discount}}</td>
+              <td>{{getTotalPrice(sellItem) | currency: 'BDT '}}</td>
+              <td>
+                <button mat-icon-button (click)="onDeleteSell(sellItem)"
+                        matTooltip="Delete Item"
+                        color="primary">
+                  <mat-icon>delete</mat-icon>
+                </button>
+              </td>
+            </tr>
+            <tr>
+              <td colspan="5" style="text-align: end">
+                <b>Grand Total:</b>
+              </td>
+              <td colspan="2"><b>{{getGrandTotal() | currency: 'BDT '}}</b></td>
+            </tr>
+          </table>
+        </div>
+        <div class="row" *ngIf="sellInvoice.sell_items.length>0">
+          <div class="col-sm-12">
+            <div class="d-flex justify-content-end">
+              <button mat-raised-button (click)="onSell()" color="primary">Sell Items</button>
+            </div>
+          </div>
+        </div>
+      </mat-card>
+    </div>
+  </div>
+</div>

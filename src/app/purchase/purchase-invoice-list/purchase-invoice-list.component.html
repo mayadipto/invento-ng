@@ -1,0 +1,80 @@
+<div class="inv-header d-flex">
+  <h2 class="ml-auto mr-auto">Purchase Invoices</h2>
+  <div>
+    <button routerLink="/purchase/create"
+            style=" position: fixed;
+                    right: 30px;
+                    bottom: 15px;
+                    z-index: 5; "
+            matTooltip="Create new purchase"
+            mat-icon-button color="primary">
+      <mat-icon style="font-size: 4em">add_circle</mat-icon>
+    </button>
+  </div>
+</div>
+<div class="container">
+  <div class="d-flex justify-content-center">
+    <mat-form-field>
+      <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Search data in table">
+      <mat-icon matSuffix>search</mat-icon>
+    </mat-form-field>
+  </div>
+
+  <div class="mat-elevation-z8">
+    <table mat-table [dataSource]="dataSource" matSort>
+
+      <!-- ID Column -->
+      <ng-container matColumnDef="sl">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Sl. </th>
+        <td mat-cell *matCellDef="let row" class="pr-1"> {{row.sl}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="code">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Invoice Code </th>
+        <td mat-cell *matCellDef="let row" class="p-1"> {{row.code}} </td>
+      </ng-container>
+
+      <!-- Progress Column -->
+      <ng-container matColumnDef="total_amount" >
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Amount </th>
+        <td mat-cell *matCellDef="let row" class="p-1"> {{row.total_purchase_price | currency:'BDT '}} </td>
+      </ng-container>
+
+      <!-- Color Column -->
+      <ng-container matColumnDef="supplier_name">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Supplied by </th>
+        <td mat-cell *matCellDef="let row" class="p-1"> {{row.supplier_name}} </td>
+      </ng-container>
+
+      <!-- Name Column -->
+      <ng-container matColumnDef="user_name">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Purchased by </th>
+        <td mat-cell *matCellDef="let row" class="p-1"> {{row.user_name}}</td>
+      </ng-container>
+
+      <!-- Color Column -->
+      <ng-container matColumnDef="created_at">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Purchased on </th>
+        <td mat-cell *matCellDef="let row" class="p-1"> {{row.created_at | date:'d/MM/yyyy'}} </td>
+      </ng-container>
+      <!--'sl', 'code', 'total_amount', 'supplier_name', 'user_name', 'created_at'-->
+
+      <!-- Color Column -->
+      <ng-container matColumnDef="action">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Action</th>
+        <td mat-cell *matCellDef="let row" class="p-1">
+          <a class="pr-3" [routerLink]="['/purchase','details', row.id]"><mat-icon color="primary">info</mat-icon></a>
+          <mat-icon color="warn">delete</mat-icon>
+        </td>
+      </ng-container>
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;">
+      </tr>
+    </table>
+    <div class="inv-paginator">
+      <mat-paginator [pageSizeOptions]="[5, 10, 25]" (page)="logInfo($event)"></mat-paginator>
+    </div>
+
+  </div>
+
+</div>

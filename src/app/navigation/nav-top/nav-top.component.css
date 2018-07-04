@@ -1,0 +1,37 @@
+.inv-nav-items{
+  list-style: none;
+  margin: 0;
+}
+.inv-nav-items li{
+  padding: 10px;
+  font-size: .8em;
+}
+li{
+  cursor: pointer;
+}
+a.white-text{
+  color: #fff;
+  transition: 300ms;
+  text-decoration: none;
+}
+a.white-text:hover{
+  color: #ff9800;
+  transition: 300ms;
+}
+mat-icon:hover{
+  color: #ff9800;
+  transition: 300ms;
+}
+a.black-text{
+  color: #000;
+  text-decoration: none;
+}
+li a{
+  position: relative;
+}
+li a mat-icon{
+  position: absolute;
+  bottom: -20px;
+  left: 50%;
+  transform: translateX(-50%);
+}

@@ -1,0 +1,123 @@
+<div class="inv-header d-flex">
+  <h2 class="ml-auto mr-auto">Sign up</h2>
+</div>
+
+<div class="container">
+  <form #f="ngForm" (ngSubmit)="createUser(f)">
+    <div class="row">
+      <div class="col-md-6 ml-auto mr-auto">
+        <mat-card>
+          <div class="row">
+            <div class="col-sm-12">
+              <mat-form-field>
+                <input
+                  name="name"
+                  type="text"
+                  ngModel
+                  #nameInput = "ngModel"
+                  placeholder="Enter Full Name"
+                  required
+                  matInput>
+                <mat-error *ngIf="emailInput.hasError('required')">Name field is required</mat-error>
+              </mat-form-field>
+            </div>
+            <div class="col-sm-12">
+              <mat-form-field>
+                <input
+                  name="email"
+                  type="email"
+                  ngModel
+                  #emailInput = "ngModel"
+                  placeholder="Your email"
+                  pattern="^((?!{{email}}).)*$"
+                  (change)="checkEmail(emailInput.value)"
+                  required
+                  email
+                  matInput>
+                <mat-error *ngIf="emailInput.hasError('required')">Email field is required</mat-error>
+                <mat-error *ngIf="emailInput.hasError('email')">Invalid email address</mat-error>
+                <mat-error *ngIf="emailInput.hasError('pattern')">Email address already taken</mat-error>
+              </mat-form-field>
+            </div>
+            <div class="col-sm-12">
+              <mat-form-field>
+                <input
+                  name="password"
+                  ngModel
+                  placeholder="Your Password"
+                  #passwordInput = "ngModel"
+                  required
+                  matInput
+                  type="password">
+                <mat-error *ngIf="passwordInput.hasError('required')">Password is required</mat-error>
+              </mat-form-field>
+            </div>
+            <div class="col-sm-12">
+              <mat-form-field>
+                <input
+                  matInput
+                  ngModel
+                  name="repassword"
+                  placeholder="repassword"
+                  required
+                  [pattern]="passwordInput.value"
+                  #repasswordInput = "ngModel"
+                  type="password">
+                <mat-error *ngIf="repasswordInput.hasError('pattern')">Password didn't match</mat-error>
+              </mat-form-field>
+            </div>
+            <div class="col-sm-12">
+              <mat-form-field>
+                <mat-select
+                  ngModel
+                  #roleInput = "ngModel"
+                  name="role"
+                  required
+                  placeholder="Set User Role">
+                  <mat-option *ngFor="let role of roles" [value]="role.value">{{role.name}}</mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+            <div class="col-sm-12">
+              <mat-form-field>
+                <mat-select
+                  ngModel
+                  #statusInput = "ngModel"
+                  name="status"
+                  required
+                  placeholder="Set User Status">
+                  <mat-option *ngFor="let status of u_status" [value]="status.value">{{status.name}}</mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+            <div class="col-md-12">
+              <div class="d-flex">
+                <button mat-raised-button
+                        class="ml-auto"
+                        color="primary"
+                        [disabled]="!f.valid"
+                        type="submit">Sign up</button>
+              </div>
+            </div>
+          </div>
+        </mat-card>
+      </div>
+    </div>
+  </form>
+</div>
+
+<div class="status" *ngIf="statusFlag == true">
+  <div class="status-body">
+    <div class="card">
+      <div class="card-body">
+        <h5 class="card-title">{{message.title}}</h5>
+        <p class="card-text">{{message.details}}</p>
+        <div class="d-flex">
+          <button mat-raised-button color="warn"
+                  (click)="onStatusClose()"
+                  class="ml-auto">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

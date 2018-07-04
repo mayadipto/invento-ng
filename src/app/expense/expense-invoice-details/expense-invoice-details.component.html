@@ -1,0 +1,93 @@
+<div class="print-only">
+  <h2 class="text-center">TPS Tires</h2>
+  <div class="text-center">The power of sole</div>
+  <div class="text-center">Office: House#244, Road#03, Baridhara DOHS Dhaka, Bangladesh, Contact: +880 1707002002</div>
+  <hr>
+</div>
+<div class="inv-header d-flex">
+  <h2 class="ml-auto mr-auto">Expense Invoices Details</h2>
+</div>
+<div class="container">
+  <div class="row">
+    <div class="col-sm-12 mb-3 mt-3">
+      <mat-card>
+        <div class="row">
+          <div class="col-md-3 bold">Code</div>
+          <div class="col-md-9">{{expenseInvoice?.code | uppercase}}</div>
+        </div>
+        <div class="row">
+          <div class="col-md-3 bold">Date</div>
+          <div class="col-md-9">{{expenseInvoice?.created_at | date: 'd/MM/yyyy'}}</div>
+        </div>
+        <div class="row">
+          <div class="col-md-3 bold">Purchased by</div>
+          <div class="col-md-9">
+            <div class="row">
+              <div class="col-md-4">{{expenseInvoice?.expense_by?.name}}</div>
+              <div class="col-md-8"><span class="bold">Phone:</span> {{expenseInvoice?.expense_by?.contact_no}}</div>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-3 bold">Purchase Amount</div>
+          <div class="col-md-9 total-price">{{expenseInvoice?.total_amount | currency:'BDT '}}</div>
+        </div>
+      </mat-card>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-sm-12 mb-3 mt-3">
+      <mat-card>
+        <div class="inv-header d-flex">
+          <h2 class="ml-auto mr-auto">Expense Item Details</h2>
+        </div>
+        <div class="row" *ngIf="expenseInvoice.expense_items">
+          <div class="col-md-12 table-responsive">
+            <table class="table">
+              <tr>
+                <th>Sl.</th>
+                <th>Details</th>
+                <th>Amount</th>
+              </tr>
+              <tr *ngFor="let item of expenseInvoice.expense_items; let i=index">
+                <td>{{ i + 1}}</td>
+                <td><div [innerHTML]="item?.details"></div></td>
+                <td>{{item?.amount | currency: 'BDT '}}</td>
+              </tr>
+            </table>
+
+          </div>
+        </div>
+      </mat-card>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-sm-12 mt-3 mb-3">
+      <mat-card>
+        <div class="inv-header d-flex no-print" *ngIf="expenseInvoice?.urls?.length>0">
+          <h2 class="ml-auto mr-auto">Expense Files</h2>
+        </div>
+        <div class="row no-print">
+          <div class="col-md-6" *ngFor="let file of expenseInvoice.urls; let i=index">
+            <div class="d-flex bg-dark align-content-between px-4 pb-2 pt-3 m-1 file" >
+              <div><a target="_blank" href="{{serverUrl}}{{file.url}}">{{expenseInvoice.code | uppercase}}-{{i+1}}</a></div>
+              <a class="ml-auto" (click)="onFileDelete(file)"><mat-icon  style="cursor: pointer">close</mat-icon></a>
+            </div>
+          </div>
+        </div>
+      </mat-card>
+    </div>
+  </div>
+  <div class="row pt-3 no-print">
+    <div class="col-md-12">
+      <div class="d-flex">
+        <button mat-raised-button color="primary" routerLink="/purchase">
+          <mat-icon>keyboard_backspace</mat-icon> Back
+        </button>
+        <button mat-raised-button color="primary" class="ml-auto" (click)="onDocumentPrint()">Print it</button>
+      </div>
+    </div>
+  </div>
+</div>

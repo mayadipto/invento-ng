@@ -1,0 +1,39 @@
+<mat-toolbar color="primary">
+  <div *ngIf = "authService.isLoggedIn()">
+    <button (click)="onSidenavToggle()" mat-icon-button>
+      <mat-icon class="no-print">menu</mat-icon>
+    </button>
+  </div>
+
+  <div class="brand-title no-print"><a class="white-text" href="/">TPS TIRE</a></div>
+  <!--<div fxFlex> </div>-->
+  <ul class="inv-nav-items d-flex ml-auto" *ngIf = "authService.isLoggedIn()">
+    <li ><a class="white-text no-print" routerLink="/">Home</a></li>
+    <li [matMenuTriggerFor]="sellMenu"><a class="white-text">Sells <mat-icon>keyboard_arrow_down</mat-icon></a></li>
+    <mat-menu #sellMenu="matMenu">
+      <li mat-menu-item><a class="black-text no-print" routerLink="/sell/invoice">All Sells</a></li>
+      <li mat-menu-item><a class="black-text no-print" routerLink="/sell/invoice/create">New Sell</a></li>
+    </mat-menu>
+
+    <li [matMenuTriggerFor]="purchaseMenu"><a class="white-text">Purchase<mat-icon>keyboard_arrow_down</mat-icon></a></li>
+    <mat-menu #purchaseMenu="matMenu">
+      <li mat-menu-item><a class="black-text no-print" routerLink="/purchase">All Purchases</a></li>
+      <li mat-menu-item><a class="black-text no-print" routerLink="/purchase/create">New Purchase</a></li>
+    </mat-menu>
+
+    <li [matMenuTriggerFor]="expenseMenu"><a class="white-text">Expense<mat-icon>keyboard_arrow_down</mat-icon></a></li>
+    <mat-menu #expenseMenu="matMenu">
+      <li mat-menu-item><a class="black-text no-print" routerLink="/expense/invoice">All Expenses</a></li>
+      <li mat-menu-item><a class="black-text no-print" routerLink="/expense/invoice/create">New Expense</a></li>
+    </mat-menu>
+
+    <li [matMenuTriggerFor]="userMenu" ><a class="white-text"
+           style="font-size: .7em; font-weight: lighter; font-style: italic; line-height: .7em">
+            Welcome, <div>{{authService.user.name}}</div></a></li>
+    <mat-menu #userMenu="matMenu">
+      <li mat-menu-item><a class="black-text no-print" (click)="logout()">Logout</a></li>
+      <li *ngIf="authService.user.role >= 5"
+        mat-menu-item><a class="black-text no-print" routerLink="/user/create">Create New User</a></li>
+    </mat-menu>
+  </ul>
+</mat-toolbar>

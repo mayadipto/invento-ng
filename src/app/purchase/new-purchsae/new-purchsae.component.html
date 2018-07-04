@@ -1,0 +1,216 @@
+<div class="inv-header d-flex">
+  <h2 class="ml-auto mr-auto">Create New Purchase</h2>
+</div>
+
+<div class="container pb-5">
+  <form #f="ngForm" (ngSubmit)="addPurchaseItem(f)">
+    <div class="row">
+      <div class="col-sm-12 mb-3 mt-3">
+        <mat-card>
+          <div class="row">
+            <div class="col-md-6">
+              <mat-form-field>
+                <input
+                  matInput type="text"
+                  placeholder="Code"
+                  ngModel name="ItemCode"
+                  required
+                  disabled
+                  #codeInput = "ngModel"
+                  [(ngModel)]="code"
+                >
+                <mat-error *ngIf="codeInput.hasError('required')">Purchase code is required</mat-error>
+              </mat-form-field>
+            </div>
+            <div class="col-md-6">
+              <mat-form-field class="example-full-width">
+                <input type="text"
+                       (keyup) ="getSupplierByName()"
+                       placeholder="Enter a supplier" required
+                       aria-label="Number" matInput [matAutocomplete]="supplierac"
+                       [(ngModel)] = "supplier"
+                       #supplierInput = "ngModel"
+                       name="supplier">
+                <mat-autocomplete #supplierac="matAutocomplete"  >
+                  <mat-option *ngFor="let option of supplierOptions" [value]="option.name" (onSelectionChange)="onSupplierChange(option)">
+                    {{  option.contact_no + ' - (' + option.name +')'}}
+                  </mat-option>
+                </mat-autocomplete>
+                <mat-error *ngIf="supplierInput.hasError('required')">Supplier is required</mat-error>
+              </mat-form-field>
+            </div>
+            <div class="col-md-6">
+              <mat-form-field class="example-full-width">
+                <input type="text"
+                       placeholder="Enter an Item" required
+                       aria-label="Number" matInput
+                       [matAutocomplete]="auto"
+                       [(ngModel)] = "item"
+                       #itemInput ="ngModel"
+                       (keyup) ="getItemByName()"
+                       name="item">
+                <mat-autocomplete #auto="matAutocomplete">
+                  <mat-option *ngFor="let option of itemOptions" [value]="option.code" (onSelectionChange)="onItemChange(option)">
+                    {{ option.code | uppercase }} {{' - (' + option.name +')' }}
+                  </mat-option>
+                </mat-autocomplete>
+                <mat-error *ngIf="itemInput.hasError('required')">Item is required</mat-error>
+              </mat-form-field>
+            </div>
+            <div class="col-md-6">
+              <mat-form-field>
+                <input type="number" matInput
+                       #quantityInput = "ngModel"
+                       name = "quantity"
+                       required
+                       [(ngModel)]="selectedItem.quantity"
+                       placeholder="Quantity"
+                       ngModel>
+                <mat-error *ngIf="quantityInput.hasError('required')">Quantity is required</mat-error>
+              </mat-form-field>
+            </div>
+            <div class="col-md-6">
+              <mat-form-field>
+                <input type="number" matInput
+                       #purchasePriceInput = "ngModel"
+                       name = "purchasePrice"
+                       required
+                       [(ngModel)]="selectedItem.purchase_price"
+                       placeholder="Purchase price /{{selectedItem?.unit || 'unit'}}"
+                       ngModel>
+                <mat-error *ngIf="purchasePriceInput.hasError('required')">Purchase price is required</mat-error>
+              </mat-form-field>
+            </div>
+            <div class="col-md-6">
+              <mat-form-field>
+                <input type="number" matInput
+                       #sellPriceInput = "ngModel"
+                       name = "sellPrice"
+                       required
+                       [(ngModel)]="selectedItem.sell_price"
+                       placeholder="New Selling Price /{{selectedItem?.unit || 'unit'}}"
+                       ngModel>
+                <mat-error *ngIf="sellPriceInput.hasError('required')">New selling price is required</mat-error>
+              </mat-form-field>
+            </div>
+            <div class="col-sm-12">
+              <mat-form-field>
+                <div class="mb-3">Purchase Details</div>
+                <textarea matInput
+                          [froalaEditor]="{
+                    placeholderText: 'Enter purchase details here...',
+                    imageUpload: false,
+                    videoUpload: false
+                    }"
+                          name="details"
+                          id="" cols="30"
+                          ngModel
+                          [(ngModel)]="details"
+                          #detailsInput="ngModel"
+                          rows="10"></textarea>
+              </mat-form-field>
+            </div>
+            <div class="col-sm-12 mb-3">
+              <div class="d-flex">
+                <button class="ml-auto" mat-raised-button
+                        type="submit" color="primary"
+                        [disabled]="f.invalid || editFlag == false">Add Item</button>
+              </div>
+            </div>
+          </div>
+        </mat-card>
+      </div>
+
+      <div class="col-sm-12 mt-3 mb-3">
+        <mat-card>
+          <div class="row">
+            <div class="col-sm-12">
+              <div class="form-group">
+                <input type="file" multiple class="form-control"
+                       (change)="onFilesSelect($event)"
+                       matTooltip="Select multiple files">
+              </div>
+            </div>
+            <div class="col-md-6" *ngFor="let file of files">
+              <div class="d-flex align-content-between p-2 m-1 file" >
+                <div>{{file.name}}</div>
+                <mat-icon class="ml-auto" (click)="onFileRemove(file)">close</mat-icon>
+              </div>
+            </div>
+          </div>
+        </mat-card>
+      </div>
+    </div>
+
+
+  </form>
+  <div class="row">
+    <div class="col-sm-12 mt-3 mb-3">
+      <mat-card>
+        <div class="table-responsive mt-3 mb-3">
+          <table class="table">
+            <thead>
+            <tr>
+              <th>Item</th>
+              <th>Brand</th>
+              <th>Quantity</th>
+              <th>Purchase Price</th>
+              <th>Selling Price</th>
+              <th>Action</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let item of purchaseList">
+              <td>{{item?.item.name}}</td>
+              <td>{{item?.item.brand.name}}</td>
+              <td>{{item?.quantity}}</td>
+              <td>{{item?.purchase_price}}</td>
+              <td>{{item.sell_price}}</td>
+              <td>
+                <button mat-icon-button color="warn"
+                        (click)="deleteItem(item)"
+                        matTooltip="Delete Item">
+                  <mat-icon>delete</mat-icon>
+                </button>
+              </td>
+            </tr>
+
+            <tr *ngIf="purchaseList.length>0">
+              <td colspan="3">
+                <div class="d-flex">
+                  <b class="ml-auto">Total: </b>
+                </div>
+              </td>
+              <td colspan="3"><b>{{total}}</b></td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="row">
+          <div class="ml-auto">
+            <button mat-raised-button color="primary"
+                    (click)="onPurchase()"
+                    [disabled]="purchaseList.length==0 || editFlag == false"
+                    class="ml-auto mr-3">Purchase</button>
+          </div>
+        </div>
+      </mat-card>
+    </div>
+  </div>
+</div>
+
+<div class="status" *ngIf="statusFlug == true">
+  <div class="status-body">
+    <div class="card">
+      <div class="card-body">
+        <h5 class="card-title">{{message.title}}</h5>
+        <p class="card-text">{{message.details}}</p>
+        <div class="d-flex">
+          <button mat-raised-button color="warn"
+                  (click)="onStatusClose()"
+                  class="ml-auto">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
